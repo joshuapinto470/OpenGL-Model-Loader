@@ -1,10 +1,11 @@
 cmake_minimum_required(VERSION 3.6)
-project(OpenGL_Template)
+project(OpenGL_Model_Loader)
 set(CMAKE_CXX_STANDARD  17)
 
 include_directories(
         "libs/glfw/include"
         "libs/glad/include/"
+        "includes/"
         "src/includes/"
 )
 
@@ -12,17 +13,18 @@ add_subdirectory(libs/glfw/)
 
 SET(SRC_FILES 
     "libs/glad/src/glad.c"
+    "src/shader.cpp"
     "src/main.cpp"
 )
 
-add_executable(OpenGL_Template
+add_executable(OpenGL_Model_Loader
     ${SRC_FILES}
 )
 
 if(WIN32)
-        target_link_libraries(OpenGL_Template PRIVATE glfw opengl32)
+        target_link_libraries(OpenGL_Model_Loader PRIVATE glfw opengl32)
 endif(WIN32)
 
 if(UNIX)
-        target_link_libraries(OpenGL_Template PRIVATE glfw GL)
+        target_link_libraries(OpenGL_Model_Loader PRIVATE glfw GL)
 endif(UNIX)
