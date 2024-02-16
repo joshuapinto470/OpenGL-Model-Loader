@@ -5,15 +5,18 @@ set(CMAKE_CXX_STANDARD  17)
 include_directories(
         "libs/glfw/include"
         "libs/glad/include/"
+        "libs/glm"
         "includes/"
         "src/includes/"
 )
 
 add_subdirectory(libs/glfw/)
+add_subdirectory(libs/glm/)
 
 SET(SRC_FILES 
     "libs/glad/src/glad.c"
     "src/shader.cpp"
+    "src/texture.cpp"
     "src/main.cpp"
 )
 
