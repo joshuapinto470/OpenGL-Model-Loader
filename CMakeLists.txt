@@ -17,6 +17,7 @@ SET(SRC_FILES
     "libs/glad/src/glad.c"
     "src/shader.cpp"
     "src/texture.cpp"
+    "src/camera.cpp"
     "src/main.cpp"
 )
 
