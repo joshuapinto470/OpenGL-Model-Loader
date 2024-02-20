@@ -6,21 +6,25 @@
 class Camera
 {
 public:
-    Camera(glm::vec3 &);
+    Camera(glm::vec3 &, float, float);
     void UpdateCamera(GLFWwindow *, float);
+    void ProcessMouseMovement(float, float, GLboolean);
     glm::mat4 getCameraViewMatrix() const;
 
 private:
-    glm::mat4 view;
-    glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
-    glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
-    glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+    void updateCameraVectors();
+    // glm::mat4 view;
+    glm::vec3 Position = glm::vec3(0.0f, 0.0f, 3.0f);
+    glm::vec3 Front = glm::vec3(0.0f, 0.0f, -1.0f);
+    glm::vec3 worldUp = glm::vec3(0.0f, 1.0f, 0.0f);
+    glm::vec3 Right;
+    glm::vec3 cameraUp;
 
-    float cameraSpeed = 0.05f;
+    float cameraSpeed = 5.0f;
+    float MouseSensitivity = 0.1f;
 
-    bool firstMouse = true;
-    float yaw = -90.0f;
-    float pitch = 0.0f;
+    float yaw;
+    float pitch;
     float lastX = 1200.0f / 2.0;
     float lastY = 800.0 / 2.0;
 };
