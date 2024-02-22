@@ -16,7 +16,7 @@ void Camera::UpdateCamera(GLFWwindow *window, float deltaTime)
     if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
         velocity *= 2.5f;
     if (glfwGetKey(window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS)
-        cameraSpeed *= 0.2f;
+        velocity *= 0.2f;
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         Position += velocity * Front;
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)

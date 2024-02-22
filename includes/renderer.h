@@ -6,7 +6,7 @@ class Render
 {
 public:
     Render();
-    void RenderLoop();
+    void Draw();
 
 private:
     GLFWwindow *pWindow;

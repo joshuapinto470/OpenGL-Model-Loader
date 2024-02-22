@@ -6,18 +6,13 @@
 
 #include <string>
 #include <shader.h>
+#include <texture.h>
 
 struct Vertex
 {
     glm::vec3 Position;
-    glm::vec3 TexCoords;
-};
-
-struct Texture
-{
-    unsigned int ID;
-    std::string type;
-    std::string path;
+    glm::vec3 Normal;
+    glm::vec2 TexCoords;
 };
 
 class Mesh
@@ -28,8 +23,8 @@ public:
 
 private:
     void initMesh();
-    std::vector<Vertex> mVertices;
-    std::vector<unsigned int> mIndices;
-    std::vector<Texture> mTextures;
+    std::vector<Vertex> m_Vertices;
+    std::vector<unsigned int> m_Indices;
+    std::vector<Texture> m_Textures;
     unsigned int VBO, VAO, EBO;
 };

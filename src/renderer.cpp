@@ -41,6 +41,6 @@ GLFWwindow *Render::initRenderer()
     return window;
 }
 
-void Render::RenderLoop()
+void Render::Draw()
 {
 }

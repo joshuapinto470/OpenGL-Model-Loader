@@ -4,8 +4,11 @@
 #include <glad/glad.h>
 #include <iostream>
 
-Texture::Texture(const std::string &name)
+Texture::Texture(const std::string &name, const std::string& path, const std::string& type)
 {
+    this->path = path;
+    this->type = type;
+    
     glGenTextures(1, &textureID);
     glBindTexture(GL_TEXTURE_2D, textureID);
 

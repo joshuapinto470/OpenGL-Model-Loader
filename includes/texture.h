@@ -3,8 +3,8 @@
 
 class Texture {
     public:
-        Texture(const std::string&);
+        Texture(const std::string&, const std::string& path, const std::string& type);
         void Bind();
-    private:
         unsigned int textureID;
+        std::string path, type;
 };

@@ -20,7 +20,5 @@ public:
     void setMat4(const std::string &, const glm::mat4 &) const;
     void setMat2(const std::string &, const glm::mat2 &) const;
     void setMat3(const std::string &, const glm::mat3 &) const;
-
-private:
     unsigned int ID;
 };
