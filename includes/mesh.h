@@ -13,13 +13,15 @@ struct Vertex
     glm::vec3 Position;
     glm::vec3 Normal;
     glm::vec2 TexCoords;
+    // glm::vec3 Tangent;
+    // glm::vec3 Bitangent;
 };
 
 class Mesh
 {
 public:
     Mesh(std::vector<Vertex>, std::vector<unsigned int>, std::vector<Texture>);
-    void Draw(Shader& shader);
+    void Draw(Shader &shader);
 
 private:
     void initMesh();

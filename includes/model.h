@@ -13,14 +13,15 @@ class Model
 {
 public:
     Model(const char *);
-    void Draw(Shader&);
+    void Draw(Shader &);
 
 private:
     std::vector<Mesh> m_meshes;
     std::vector<Texture> m_textures_loaded;
+    std::string m_directory;
 
     void loadModel(std::string);
     void processNode(aiNode *, const aiScene *);
     Mesh processMesh(aiMesh *, const aiScene *);
-    // std::vector<Texture> loadMaterialTextures(aiMaterial *, aiTextureType , std::string );
+    std::vector<Texture> loadMaterialTextures(aiMaterial *, aiTextureType, std::string);
 };
