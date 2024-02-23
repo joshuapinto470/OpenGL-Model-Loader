@@ -15,7 +15,8 @@ void Model::Draw(Shader &shader)
 void Model::loadModel(std::string path)
 {
     Assimp::Importer import;
-    const aiScene *scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_CalcTangentSpace);
+    const aiScene *scene = import.ReadFile(path, aiProcess_Triangulate |
+                                                     aiProcess_GenSmoothNormals | aiProcess_CalcTangentSpace | aiProcess_JoinIdenticalVertices);
     // const aiScene *scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_JoinIdenticalVertices);
 
     if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
@@ -27,8 +28,14 @@ void Model::loadModel(std::string path)
     m_directory = path.substr(0, path.find_last_of('/'));
 
     std::cout << "Model dir: " << m_directory << std::endl;
-
+    m_total_vertices = 0;
+    m_total_indices = 0;
     processNode(scene->mRootNode, scene);
+
+    std ::cout << "Total meshes loaded: " << m_meshes.size() << std::endl;
+    std ::cout << "Total vertices : " << m_total_vertices << "\n";
+    std ::cout << "Total indices : " << m_total_indices << "\n";
+    std ::cout << "Total textures: " << m_textures_loaded.size() << std::endl;
 }
 
 void Model::processNode(aiNode *node, const aiScene *scene)
@@ -119,9 +126,11 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene)
     std::vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
     textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
 
-    std::cout << "Vertices size : " << vertices.size() << "\n";
-    std::cout << "Indices size : " << indices.size() << "\n";
-
+    std::cout << "Mesh size " << vertices.size() << ", " << indices.size() << ", " << textures.size() << "\n";
+    // std::cout << "Vertices size : " << vertices.size() << "\n";
+    // std::cout << "Indices size : " << indices.size() << "\n";
+    m_total_vertices += vertices.size();
+    m_total_indices += indices.size();
     return Mesh(vertices, indices, textures);
 }
 

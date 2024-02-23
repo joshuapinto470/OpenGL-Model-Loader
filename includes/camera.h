@@ -10,6 +10,7 @@ public:
     void UpdateCamera(GLFWwindow *, float);
     void ProcessMouseMovement(float, float, GLboolean);
     glm::mat4 getCameraViewMatrix() const;
+    glm::vec3 getPosition() const;
 
 private:
     void updateCameraVectors();

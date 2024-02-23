@@ -3,11 +3,13 @@ project(OpenGL_Model_Loader)
 set(CMAKE_CXX_STANDARD  17)
 
 include_directories(
+
         "libs/glfw/include"
         "libs/glad/include/"
         "libs/assimp/"
         "libs/glm"
         "includes/"
+        "includes/imgui"
         "src/includes/"
 )
 
@@ -21,6 +23,13 @@ add_subdirectory(libs/glm/)
 
 SET(SRC_FILES 
     "libs/glad/src/glad.c"
+    "libs/imgui/imgui.cpp"
+    "libs/imgui/imgui_demo.cpp"
+    "libs/imgui/imgui_draw.cpp"
+    "libs/imgui/imgui_impl_glfw.cpp"
+    "libs/imgui/imgui_impl_opengl3.cpp"
+    "libs/imgui/imgui_tables.cpp"
+    "libs/imgui/imgui_widgets.cpp"
     "src/shader.cpp"
     "src/texture.cpp"
     "src/renderer.cpp"
@@ -28,6 +37,8 @@ SET(SRC_FILES
     "src/camera.cpp"
     "src/model.cpp"
     "src/main.cpp"
+
+
 )
 
 add_executable(OpenGL_Model_Loader

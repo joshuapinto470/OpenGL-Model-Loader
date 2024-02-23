@@ -20,6 +20,9 @@ private:
     std::vector<Texture> m_textures_loaded;
     std::string m_directory;
 
+    unsigned int m_total_vertices;
+    unsigned int m_total_indices;
+
     void loadModel(std::string);
     void processNode(aiNode *, const aiScene *);
     Mesh processMesh(aiMesh *, const aiScene *);

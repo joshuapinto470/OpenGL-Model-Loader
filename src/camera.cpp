@@ -35,6 +35,11 @@ void Camera::UpdateCamera(GLFWwindow *window, float deltaTime)
     // ProcessMouseMovement();
 }
 
+glm::vec3 Camera::getPosition() const
+{
+    return Position;
+}
+
 glm::mat4 Camera::getCameraViewMatrix() const
 {
     return glm::lookAt(Position, Position + Front, worldUp);
