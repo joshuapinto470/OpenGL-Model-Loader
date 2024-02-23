@@ -15,11 +15,12 @@ include_directories(
 
 # link_directories(${CMAKE_SOURCE_DIR}/libs/assimp)
 # link_directories(${CMAKE_SOURCE_DIR}/libs/zlib)
-find_library(ASSIMP_LIB NAMES assimp REQUIRED HINTS ${CMAKE_SOURCE_DIR}/libs/assimp)
-find_library(ZLIB_LIB NAMES zlibstatic REQUIRED HINTS ${CMAKE_SOURCE_DIR}/libs/zlib )
+# find_library(ASSIMP_LIB NAMES assimp REQUIRED HINTS ${CMAKE_SOURCE_DIR}/libs/assimp)
+# find_library(ZLIB_LIB NAMES zlibstatic REQUIRED HINTS ${CMAKE_SOURCE_DIR}/libs/zlib )
 
 add_subdirectory(libs/glfw/)
 add_subdirectory(libs/glm/)
+add_subdirectory(libs/assimp/)
 
 SET(SRC_FILES 
     "libs/glad/src/glad.c"
@@ -37,8 +38,6 @@ SET(SRC_FILES
     "src/camera.cpp"
     "src/model.cpp"
     "src/main.cpp"
-
-
 )
 
 add_executable(OpenGL_Model_Loader
@@ -46,9 +45,9 @@ add_executable(OpenGL_Model_Loader
 )
 
 if(WIN32)
-        target_link_libraries(OpenGL_Model_Loader PRIVATE glfw opengl32 ${ASSIMP_LIB} ${ZLIB_LIB})
+        target_link_libraries(OpenGL_Model_Loader PRIVATE glfw opengl32 assimp)
 endif(WIN32)
 
 if(UNIX)
-        target_link_libraries(OpenGL_Model_Loader PRIVATE glfw GL assimp zlibstatic)
+        target_link_libraries(OpenGL_Model_Loader PRIVATE glfw GL assimp)
 endif(UNIX)
