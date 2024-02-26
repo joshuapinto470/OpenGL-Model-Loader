@@ -4,47 +4,7 @@
 #include <glad/glad.h>
 #include <iostream>
 
-// Texture::Texture(const std::string &name, const std::string &path, const std::string &type)
-// {
-//     this->path = path;
-//     this->type = type;
-
-//     glGenTextures(1, &textureID);
-//     glBindTexture(GL_TEXTURE_2D, textureID);
-
-//     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-//     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-//     // set texture filtering parameters
-//     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-//     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-//     int width, height, nrChannels;
-//     unsigned char *data = stbi_load(name.c_str(), &width, &height, &nrChannels, 0);
-
-//     if (data)
-//     {
-//         if (nrChannels == 4)
-//             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-//         else
-//             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-
-//         glGenerateMipmap(GL_TEXTURE_2D);
-//     }
-//     else
-//     {
-//         std ::cout << "Failed to load texture." << name << std::endl;
-//     }
-
-//     stbi_image_free(data);
-// }
-
-// void Texture::Bind()
-// {
-//     glBindTexture(GL_TEXTURE_2D, textureID);
-// }
-
-unsigned int TextureFromFile(const char *path, const std::string &directory, bool gamma)
-{
+unsigned int TextureFromFile(const char *path, const std::string &directory, bool gamma) {
     std::string filename = std::string(path);
     filename = directory + '/' + filename;
 
@@ -53,27 +13,26 @@ unsigned int TextureFromFile(const char *path, const std::string &directory, boo
 
     int width, height, nrComponents;
     unsigned char *data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
-    if (data)
-    {
+    if (data) {
         GLenum format;
-        if (nrComponents == 1)
+        if (nrComponents == 1) {
             format = GL_RED;
-        else if (nrComponents == 3)
+        } else if (nrComponents == 3) {
             format = GL_RGB;
-        else if (nrComponents == 4)
+        } else if (nrComponents == 4) {
             format = GL_RGBA;
+        }
 
         glBindTexture(GL_TEXTURE_2D, textureID);
-        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE,
+                     data);
         glGenerateMipmap(GL_TEXTURE_2D);
 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    }
-    else
-    {
+    } else {
         std::cout << "Texture failed to load at path: " << path << std::endl;
     }
     stbi_image_free(data);
@@ -81,11 +40,10 @@ unsigned int TextureFromFile(const char *path, const std::string &directory, boo
     return textureID;
 }
 
-unsigned TextureFromData(char r, char g, char b)
-{
-    std :: cout << "Creating a default texture.\n";
+unsigned TextureFromData(char r, char g, char b) {
+    std ::cout << "Creating a default texture.\n";
     unsigned texID;
-    unsigned char  *data = new unsigned char[3];
+    unsigned char *data = new unsigned char[3];
     data[0] = r;
     data[1] = g;
     data[2] = b;

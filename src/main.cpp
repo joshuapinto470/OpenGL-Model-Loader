@@ -43,18 +43,17 @@ Camera cam(pos, -90.0f, 0.0f);
 #include <renderer.h>
 void processNode(aiNode *, const aiScene *);
 void processMesh(aiMesh *, const aiScene *);
-int main(int argc, char const *argv[])
-{
+int main(int argc, char const *argv[]) {
     // OGML::Render mRender(1200, 800);
     // mRender.Draw();
     // const std::string path = "../resources/models/backpack/backpack.obj";
     const std::string path = "../resources/models/basic_scene_textured.dae";
 
     Assimp::Importer importer;
-    const aiScene *scene = importer.ReadFile(path, aiProcess_Triangulate |
-                                                       aiProcess_GenSmoothNormals | aiProcess_CalcTangentSpace | aiProcess_JoinIdenticalVertices);
-    if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
-    {
+    const aiScene *scene = importer.ReadFile(
+      path, aiProcess_Triangulate | aiProcess_GenSmoothNormals |
+              aiProcess_CalcTangentSpace | aiProcess_JoinIdenticalVertices);
+    if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
         std ::cout << "ERROR::ASSIMP::" << importer.GetErrorString() << std::endl;
         return -1;
     }
@@ -65,26 +64,21 @@ int main(int argc, char const *argv[])
     return 0;
 }
 
-
-void processNode(aiNode *node, const aiScene *scene)
-{
+void processNode(aiNode *node, const aiScene *scene) {
     aiMatrix4x4 node_transform = node->mTransformation;
-    
+
     std::vector<Mesh> m_meshes;
-    for (unsigned int i = 0; i < node->mNumMeshes; i++)
-    {
+    for (unsigned int i = 0; i < node->mNumMeshes; i++) {
         aiMesh *mesh = scene->mMeshes[node->mMeshes[i]];
         processMesh(mesh, scene);
     }
 
-    for (unsigned int i = 0; i < node->mNumChildren; i++)
-    {
+    for (unsigned int i = 0; i < node->mNumChildren; i++) {
         processNode(node->mChildren[i], scene);
     }
 }
 
-void processMesh(aiMesh *mesh, const aiScene *scene)
-{
+void processMesh(aiMesh *mesh, const aiScene *scene) {
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
     std::vector<Texture> textures;
@@ -94,8 +88,7 @@ void processMesh(aiMesh *mesh, const aiScene *scene)
 
     std ::cout << "Processing mesh : " << mesh->mName.C_Str() << std ::endl;
 
-    for (unsigned int i = 0; i < mesh->mNumVertices; i++)
-    {
+    for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
         Vertex vertex;
         glm::vec3 vector;
 
@@ -105,35 +98,31 @@ void processMesh(aiMesh *mesh, const aiScene *scene)
         vector.z = mesh->mVertices[i].z;
         vertex.Position = vector;
 
-        if (mesh->HasNormals())
-        {
+        if (mesh->HasNormals()) {
             vector.x = mesh->mNormals[i].x;
             vector.y = mesh->mNormals[i].y;
             vector.z = mesh->mNormals[i].z;
             vertex.Normal = vector;
         }
 
-        if (mesh->mTextureCoords[0])
-        {
+        if (mesh->mTextureCoords[0]) {
             glm::vec2 vec;
 
             vec.x = mesh->mTextureCoords[0][i].x;
             vec.y = mesh->mTextureCoords[0][i].y;
             vertex.TexCoords = vec;
-        }
-        else
-        {
+        } else {
             vertex.TexCoords = glm::vec2(0.0f, 0.0f);
         }
         vertices.push_back(vertex);
     }
 
-    for (unsigned int i = 0; i < mesh->mNumFaces; i++)
-    {
+    for (unsigned int i = 0; i < mesh->mNumFaces; i++) {
         aiFace face = mesh->mFaces[i];
         // retrieve all indices of the face and store them in the indices vector
-        for (unsigned int j = 0; j < face.mNumIndices; j++)
+        for (unsigned int j = 0; j < face.mNumIndices; j++) {
             indices.push_back(face.mIndices[j]);
+        }
     }
 
     aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
@@ -150,50 +139,56 @@ void processMesh(aiMesh *mesh, const aiScene *scene)
     material->Get(AI_MATKEY_COLOR_SPECULAR, specular);
     material->Get(AI_MATKEY_SHININESS_STRENGTH, roughness);
 
-    std :: cout << "------*------*------*\n";
-    std :: cout << "Material name : " << mat_name.C_Str() << std::endl;
-    std :: cout << "Color : " << color.r << " " << color.g << " " << color.b << "\n";
-    std :: cout << "Specular : " << specular.r << " " << specular.g << " " << specular.b << "\n";
-    std :: cout << "Reflective : " << reflective.r << " " << reflective.g << " " << reflective.b << "\n";
-    std :: cout << "Roughness : " << roughness << std :: endl;
+    std ::cout << "------*------*------*\n";
+    std ::cout << "Material name : " << mat_name.C_Str() << std::endl;
+    std ::cout << "Color : " << color.r << " " << color.g << " " << color.b << "\n";
+    std ::cout << "Specular : " << specular.r << " " << specular.g << " " << specular.b
+               << "\n";
+    std ::cout << "Reflective : " << reflective.r << " " << reflective.g << " "
+               << reflective.b << "\n";
+    std ::cout << "Roughness : " << roughness << std ::endl;
 
     aiTextureType texType = aiTextureType_DIFFUSE;
-    for (unsigned i = 0; i < material->GetTextureCount(texType); i++){
+    for (unsigned i = 0; i < material->GetTextureCount(texType); i++) {
         aiString str;
         material->GetTexture(texType, i, &str);
-        std:: cout << "tex string : " <<  str.C_Str() << "\n";
+        std::cout << "tex string : " << str.C_Str() << "\n";
         // const aiTexture* mTexture = scene->GetEmbeddedTexture(str.C_Str());
     }
 
-    // std::vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
-    // textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
+    // std::vector<Texture> diffuseMaps = loadMaterialTextures(material,
+    // aiTextureType_DIFFUSE, "texture_diffuse"); textures.insert(textures.end(),
+    // diffuseMaps.begin(), diffuseMaps.end());
     // // 2. specular maps
-    // std::vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
-    // textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
+    // std::vector<Texture> specularMaps = loadMaterialTextures(material,
+    // aiTextureType_SPECULAR, "texture_specular"); textures.insert(textures.end(),
+    // specularMaps.begin(), specularMaps.end());
     // // 3. normal maps
-    // std::vector<Texture> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
-    // textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
+    // std::vector<Texture> normalMaps = loadMaterialTextures(material,
+    // aiTextureType_HEIGHT, "texture_normal"); textures.insert(textures.end(),
+    // normalMaps.begin(), normalMaps.end());
     // // 4. height maps
-    // std::vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
-    // textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
+    // std::vector<Texture> heightMaps = loadMaterialTextures(material,
+    // aiTextureType_AMBIENT, "texture_height"); textures.insert(textures.end(),
+    // heightMaps.begin(), heightMaps.end());
 
-    std::cout << "Mesh size " << vertices.size() << ", " << indices.size() << ", " << textures.size() << "\n";
+    std::cout << "Mesh size " << vertices.size() << ", " << indices.size() << ", "
+              << textures.size() << "\n";
 
     // return Mesh(vertices, indices, textures);
 }
 #endif
 
 #ifndef TEST_MAIN
-int main()
-{
+int main() {
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    GLFWwindow *window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "OpenGL Model Loader", NULL, NULL);
-    if (window == NULL)
-    {
+    GLFWwindow *window =
+      glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "OpenGL Model Loader", NULL, NULL);
+    if (window == NULL) {
         std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
         return -1;
@@ -205,8 +200,7 @@ int main()
     glfwSetCursorPosCallback(window, mouse_callback);
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-    {
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         std::cout << "Failed to initialize GLAD" << std::endl;
         return -1;
     }
@@ -231,7 +225,6 @@ int main()
 
     Model scene("../resources/models/backpack/backpack.obj");
     // Model scene("../resources/models/basic_scene.dae");
-
 
     glEnable(GL_DEPTH_TEST);
 
@@ -259,15 +252,13 @@ int main()
     float lastFrame = 0.0f;
     float deltaTime;
 
-    float delay = 0.25f; // 0.25 seconds
+    float delay = 0.25f;  // 0.25 seconds
     float delayPassed = 0.0f;
     float FPS = 0.0;
     float deltaInMS;
 
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    while (!glfwWindowShouldClose(window))
-    {
-
+    while (!glfwWindowShouldClose(window)) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         float currentFrame = static_cast<float>(glfwGetTime());
         deltaTime = currentFrame - lastFrame;
@@ -297,8 +288,7 @@ int main()
         // ImGui::ShowDemoWindow();
 
         ImGui::Begin("Debug Info");
-        if (delayPassed > delay)
-        {
+        if (delayPassed > delay) {
             FPS = (1.0 / deltaTime);
             deltaInMS = deltaTime * 1000;
         }
@@ -316,8 +306,9 @@ int main()
 
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-        if (delayPassed > delay)
+        if (delayPassed > delay) {
             delayPassed = 0.0f;
+        }
 
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -330,29 +321,24 @@ int main()
     return 0;
 }
 
-void processInput(GLFWwindow *window)
-{
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-    {
+void processInput(GLFWwindow *window) {
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
         mouseEnable = false;
     }
 
-    if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS)
-    {
+    if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS) {
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
         mouseEnable = true;
     }
     // glfwSetWindowShouldClose(window, true);
 }
 
-void mouse_callback(GLFWwindow *window, double xposIn, double yposIn)
-{
+void mouse_callback(GLFWwindow *window, double xposIn, double yposIn) {
     float xpos = static_cast<float>(xposIn);
     float ypos = static_cast<float>(yposIn);
 
-    if (firstMouse)
-    {
+    if (firstMouse) {
         lastX = xpos;
         lastY = ypos;
         firstMouse = false;
@@ -363,12 +349,12 @@ void mouse_callback(GLFWwindow *window, double xposIn, double yposIn)
     lastX = xpos;
     lastY = ypos;
 
-    if (mouseEnable)
+    if (mouseEnable) {
         cam.ProcessMouseMovement(xoffset, yoffset, GL_TRUE);
+    }
 }
 
-void framebuffer_size_callback(GLFWwindow *window, int width, int height)
-{
+void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
     glViewport(0, 0, width, height);
 }
 

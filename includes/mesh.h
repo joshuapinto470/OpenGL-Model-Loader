@@ -8,8 +8,7 @@
 #include <shader.h>
 #include <texture.h>
 
-struct Vertex
-{
+struct Vertex {
     glm::vec3 Position;
     glm::vec3 Normal;
     glm::vec2 TexCoords;
@@ -17,14 +16,14 @@ struct Vertex
     // glm::vec3 Bitangent;
 };
 
-class Mesh
-{
-public:
+class Mesh {
+   public:
     Mesh(std::vector<Vertex>, std::vector<unsigned int>, std::vector<unsigned>);
     void Draw(Shader &shader);
 
     std::vector<unsigned> mTextures;
-private:
+
+   private:
     void initMesh();
     std::vector<Vertex> m_Vertices;
     std::vector<unsigned> m_Indices;

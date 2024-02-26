@@ -3,9 +3,8 @@
 #include <string>
 #include <glm/glm.hpp>
 
-class Shader
-{
-public:
+class Shader {
+   public:
     Shader(const char *, const char *);
     void use();
     void setInt(const std::string &, int) const;

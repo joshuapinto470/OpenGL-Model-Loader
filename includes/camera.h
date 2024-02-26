@@ -3,16 +3,15 @@
 #include <glm/glm.hpp>
 #include <GLFW/glfw3.h>
 
-class Camera
-{
-public:
+class Camera {
+   public:
     Camera(glm::vec3 &, float, float);
     void UpdateCamera(GLFWwindow *, float);
     void ProcessMouseMovement(float, float, GLboolean);
     glm::mat4 getCameraViewMatrix() const;
     glm::vec3 getPosition() const;
 
-private:
+   private:
     void updateCameraVectors();
     // glm::mat4 view;
     glm::vec3 Position = glm::vec3(0.0f, 0.0f, 3.0f);

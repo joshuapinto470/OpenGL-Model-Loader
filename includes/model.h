@@ -11,14 +11,12 @@
 
 #include <glad/glad.h>
 
-
-class Model
-{
-public:
+class Model {
+   public:
     Model(const char *);
     void Draw(Shader &);
 
-private:
+   private:
     std::vector<Mesh> m_meshes;
     std::vector<Texture> m_textures;
     std::string m_directory;
