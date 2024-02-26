@@ -9,6 +9,9 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
+#include <glad/glad.h>
+
+
 class Model
 {
 public:
@@ -17,7 +20,7 @@ public:
 
 private:
     std::vector<Mesh> m_meshes;
-    std::vector<Texture> m_textures_loaded;
+    std::vector<Texture> m_textures;
     std::string m_directory;
 
     unsigned int m_total_vertices;
@@ -26,5 +29,5 @@ private:
     void loadModel(std::string);
     void processNode(aiNode *, const aiScene *);
     Mesh processMesh(aiMesh *, const aiScene *);
-    std::vector<Texture> loadMaterialTextures(aiMaterial *, aiTextureType, std::string);
+    std::vector<unsigned> loadMaterialTextures(aiMaterial *, aiTextureType, std::string);
 };

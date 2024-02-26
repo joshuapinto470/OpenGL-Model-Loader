@@ -16,4 +16,5 @@ struct Texture {
     std::string path;
 };
 
+unsigned TextureFromData(char r, char g, char b);
 unsigned int TextureFromFile(const char *, const std::string &, bool gamma = true);

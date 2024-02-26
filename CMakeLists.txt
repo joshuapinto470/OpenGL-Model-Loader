@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.6)
 project(OpenGL_Model_Loader)
 set(CMAKE_CXX_STANDARD  17)
 
+# add_definitions( -DIMPL_IMGUI_UI )
+
 include_directories(
 
         "libs/glfw/include"
