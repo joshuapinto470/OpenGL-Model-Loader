@@ -5,6 +5,10 @@
 #include <sstream>
 #include <string>
 
+Shader::Shader() {
+    ID = -1;
+}
+
 Shader::Shader(const char *vertexPath, const char *fragmentPath) {
     // Read the shaders into memory.
     std::ifstream vShaderFile;

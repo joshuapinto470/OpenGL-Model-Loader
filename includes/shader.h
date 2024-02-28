@@ -5,6 +5,7 @@
 
 class Shader {
    public:
+    Shader();
     Shader(const char *, const char *);
     void use();
     void setInt(const std::string &, int) const;

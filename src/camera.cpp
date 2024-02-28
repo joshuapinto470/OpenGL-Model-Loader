@@ -1,15 +1,27 @@
 #include <camera.h>
 #include <glm/gtc/matrix_transform.hpp>
 
-Camera::Camera(glm::vec3 &position, float Yaw = -90.0f, float Pitch = 0.0f)
+Camera::Camera(glm::vec3 position, glm::vec2 attitude, glm::vec2 clip, float aspect)
     : Position(position) {
-    // view = glm::lookAt(Position, Position + Front, worldUp);
-    yaw = Yaw;
-    pitch = Pitch;
+    m_projection = glm::perspective(glm::radians(FOV), aspect, clip.x, clip.y);
+
+    near_clip = clip.x;
+    far_clip = clip.y;
+    yaw = attitude.x;
+    pitch = attitude.y;
+    this->aspect = aspect;
+
     updateCameraVectors();
 }
 
-void Camera::UpdateCamera(GLFWwindow *window, float deltaTime) {
+void Camera::UpdateProjection(float FOV, float aspect) {
+    // m_projection = glm::mat4x4(1.0);
+    this->aspect = aspect;
+    this->FOV = FOV;
+    m_projection = glm::perspective(glm::radians(FOV), aspect, near_clip, far_clip);
+}
+
+void Camera::UpdateCamera(GLFWwindow* window, float deltaTime) {
     // Process keyboard input
     float velocity = cameraSpeed * deltaTime;
     if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
@@ -41,31 +53,45 @@ void Camera::UpdateCamera(GLFWwindow *window, float deltaTime) {
 }
 
 glm::vec3 Camera::getPosition() const { return Position; }
+glm::mat4 Camera::getProjectionMatrix() const { return m_projection; }
 
 glm::mat4 Camera::getCameraViewMatrix() const {
     return glm::lookAt(Position, Position + Front, worldUp);
 }
 
-void Camera::ProcessMouseMovement(float xoffset, float yoffset,
-                                  GLboolean constrainPitch = true) {
-    xoffset *= MouseSensitivity;
-    yoffset *= MouseSensitivity;
-
-    yaw += xoffset;
-    pitch += yoffset;
-
-    // make sure that when pitch is out of bounds, screen doesn't get flipped
-    if (constrainPitch) {
-        if (pitch > 89.0f) {
-            pitch = 89.0f;
-        }
-        if (pitch < -89.0f) {
-            pitch = -89.0f;
-        }
+void Camera::ProcessMouseMovement(float xpos, float ypos, GLboolean constrainPitch = true,
+                                  bool mouseEnable = true) {
+    if (firstMouse) {
+        lastX = xpos;
+        lastY = ypos;
+        firstMouse = false;
     }
 
-    // update Front, Right and Up Vectors using the updated Euler angles
-    updateCameraVectors();
+    float xoffset = xpos - lastX;
+    float yoffset = lastY - ypos;
+    lastX = xpos;
+    lastY = ypos;
+
+    if (mouseEnable) {
+        xoffset *= MouseSensitivity;
+        yoffset *= MouseSensitivity;
+
+        yaw += xoffset;
+        pitch += yoffset;
+
+        // make sure that when pitch is out of bounds, screen doesn't get flipped
+        if (constrainPitch) {
+            if (pitch > 89.0f) {
+                pitch = 89.0f;
+            }
+            if (pitch < -89.0f) {
+                pitch = -89.0f;
+            }
+        }
+
+        // update Front, Right and Up Vectors using the updated Euler angles
+        updateCameraVectors();
+    }
 }
 
 void Camera::updateCameraVectors() {

@@ -2,36 +2,40 @@
 #include <iostream>
 
 Model::Model(const char *path) { loadModel(path); }
+Model::Model(const std::string path) { loadModel(path.c_str()); }
 
 void Model::Draw(Shader &shader) {
-    unsigned int diffuseNr = 1;
-    unsigned int specularNr = 1;
-    unsigned int normalNr = 1;
-    unsigned int heightNr = 1;
-    for (unsigned int j = 0; j < m_textures.size(); j++) {
-        Texture tex = m_textures[j];
+    for (unsigned int i = 0; i < m_meshes.size(); i++) {
+        unsigned int diffuseNr = 1;
+        unsigned int specularNr = 1;
+        unsigned int normalNr = 1;
+        unsigned int heightNr = 1;
 
-        glActiveTexture(GL_TEXTURE0 + j);  // active proper texture unit before binding
-        // retrieve texture number (the N in diffuse_textureN)
-        std::string number;
-        std::string name = tex.type;
-        if (name == "texture_diffuse") {
-            number = std::to_string(diffuseNr++);
-        } else if (name == "texture_specular") {
-            number = std::to_string(specularNr++);  // transfer unsigned int to string
-        } else if (name == "texture_normal") {
-            number = std::to_string(normalNr++);  // transfer unsigned int to string
-        } else if (name == "texture_height") {
-            number = std::to_string(heightNr++);  // transfer unsigned int to string
+        Mesh mesh = m_meshes[i];
+
+        for (unsigned int j = 0; j < mesh.mTextures.size(); j++) {
+            Texture tex = m_textures[mesh.mTextures[j]];
+
+            glActiveTexture(GL_TEXTURE0 + j);
+
+            std::string number;
+            std::string name = tex.type;
+            if (name == "texture_diffuse") {
+                number = std::to_string(diffuseNr++);
+            } else if (name == "texture_specular") {
+                number = std::to_string(specularNr++);  // transfer unsigned int to string
+            } else if (name == "texture_normal") {
+                number = std::to_string(normalNr++);  // transfer unsigned int to string
+            } else if (name == "texture_height") {
+                number = std::to_string(heightNr++);  // transfer unsigned int to string
+            }
+
+            // now set the sampler to the correct texture unit
+            glUniform1i(glGetUniformLocation(shader.ID, (name + number).c_str()), j);
+            // and finally bind the texture
+            glBindTexture(GL_TEXTURE_2D, tex.id);
         }
 
-        // now set the sampler to the correct texture unit
-        glUniform1i(glGetUniformLocation(shader.ID, (name + number).c_str()), j);
-        // and finally bind the texture
-        glBindTexture(GL_TEXTURE_2D, tex.id);
-    }
-
-    for (unsigned int i = 0; i < m_meshes.size(); i++) {
         m_meshes[i].Draw(shader);
     }
 }

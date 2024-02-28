@@ -25,9 +25,9 @@ void main()
     vec3 ambient = ambientStrength * lightColor;
     vec4 objectColor = texture(texture_diffuse1, TexCoord);
 
-    vec3 norm = normalize(v_normal);
-    // vec3 norm = texture(texture_normal1, TexCoord).rgb;
-    // norm = normalize(norm * 2.0 - 1.0);
+    // vec3 norm = normalize(v_normal);
+    vec3 norm = texture(texture_normal1, TexCoord).rgb;
+    norm = normalize(norm * 2.0 - 1.0);
     vec3 lightDir = normalize(lightPos - FragPos);
 
     vec3 viewDir = normalize(viewPos - FragPos);
