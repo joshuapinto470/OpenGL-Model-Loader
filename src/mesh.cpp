@@ -8,13 +8,13 @@ Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices,
     this->mTextures = texture;
 
     initMesh();
+    m_index_size = indices.size();
 }
 
 void Mesh::Draw(Shader &shader) {
     // draw mesh
     glBindVertexArray(VAO);
-    glDrawElements(GL_TRIANGLES, static_cast<unsigned int>(m_Indices.size()),
-                   GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, m_index_size, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 
     // always good practice to set everything back to defaults once configured.

@@ -5,6 +5,7 @@ Model::Model(const char *path) { loadModel(path); }
 Model::Model(const std::string path) { loadModel(path.c_str()); }
 
 void Model::Draw(Shader &shader) {
+    shader.use();
     for (unsigned int i = 0; i < m_meshes.size(); i++) {
         unsigned int diffuseNr = 1;
         unsigned int specularNr = 1;
@@ -31,7 +32,8 @@ void Model::Draw(Shader &shader) {
             }
 
             // now set the sampler to the correct texture unit
-            glUniform1i(glGetUniformLocation(shader.ID, (name + number).c_str()), j);
+            glUniform1i(glGetUniformLocation(shader.ID, ("material." + name + number).c_str()), j);
+
             // and finally bind the texture
             glBindTexture(GL_TEXTURE_2D, tex.id);
         }
@@ -59,6 +61,7 @@ void Model::loadModel(std::string path) {
     m_total_vertices = 0;
     m_total_indices = 0;
     processNode(scene->mRootNode, scene);
+    m_meshes.shrink_to_fit();
 
     std ::cout << "Total meshes loaded: " << m_meshes.size() << std::endl;
     std ::cout << "Total vertices : " << m_total_vertices << "\n";
@@ -159,6 +162,8 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene) {
 
     m_total_vertices += vertices.size();
     m_total_indices += indices.size();
+    vertices.shrink_to_fit();
+    indices.shrink_to_fit();
     return Mesh(vertices, indices, textures);
 }
 

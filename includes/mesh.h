@@ -29,4 +29,5 @@ class Mesh {
     std::vector<unsigned> m_Indices;
     glm::mat4x4 m_transform;
     unsigned int VBO, VAO, EBO;
+    unsigned m_index_size;
 };

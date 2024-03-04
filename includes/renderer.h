@@ -9,6 +9,7 @@ namespace OGML {
 class Render {
    public:
     Render(unsigned, unsigned);
+    ~Render();
     void LoadModel(const char *path);
     void AttachCamera(Camera *);
     void AttachShader(Shader);
@@ -23,14 +24,10 @@ class Render {
 
     static void framebuffer_size_cb(GLFWwindow *, int, int);
     static void mouse_cb(GLFWwindow *, double, double);
-    
+
     bool mouseEnable = true;
     void processInput();
     GLFWwindow *initRenderer();
 };
 
-struct OGLSTATE {
-    bool camera_update;
-    GLuint VAO;
-};
 }  // namespace OGML

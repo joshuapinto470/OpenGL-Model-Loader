@@ -21,6 +21,7 @@ GLFWwindow* Render::initRenderer() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_SAMPLES, 4);
 
     GLFWwindow* window =
       glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "OpenGL Model Loader", NULL, NULL);
@@ -56,6 +57,7 @@ void Render::Draw() {
     }
 
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_MULTISAMPLE); // Enable MSAA
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
     glm::mat4 model_mat = glm::mat4(1.0f);
@@ -71,8 +73,10 @@ void Render::Draw() {
     glm::vec3 lightColor(1.0f, 1.0f, 1.0f);
     glm::vec3 lightPos(0.0f, 1.0f, 2.0f);
 
-    m_shader.setVec3("lightColor", lightColor);
-    m_shader.setVec3("lightPos", lightPos);
+    m_shader.setVec3("light.position", lightPos);
+    m_shader.setVec3("light.diffuse", lightColor);
+    m_shader.setVec3("light.specular", glm::vec3(1.0f, 1.0f, 1.0f));
+    m_shader.setVec3("light.ambient", glm::vec3(0.08f));
 
     float deltaTime;
     float lastFrame = 0.0f;
@@ -96,7 +100,14 @@ void Render::Draw() {
         glfwPollEvents();
     }
 
+    // glfwTerminate();
+}
+
+Render::~Render() {
     glfwTerminate();
+    pWindow = nullptr;
+    delete m_model;
+    m_model = nullptr;
 }
 
 void Render::LoadModel(const char* path) { m_model = new Model(path); }
